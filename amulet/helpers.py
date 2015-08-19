@@ -194,3 +194,7 @@ def fail_if_timeout(seconds):
         raise_status(FAIL, msg=message)
     except:
         raise
+
+
+def get_charm_directory():
+    return os.path.abspath(os.path.join(sys.path[0], os.pardir))

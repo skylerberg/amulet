@@ -8,6 +8,7 @@ import yaml
 
 from .helpers import reify
 from .helpers import run_bzr
+from .helpers import get_charm_directory
 from charmworldlib.charm import Charm
 from path import path
 from path import tempdir
@@ -51,7 +52,8 @@ class CharmCache(dict):
             return charm
 
         charm = charm_ or service
-        charm = os.getcwd() if charm == self.test_charm else charm
+        charm = get_charm_directory() if charm == self.test_charm else charm
+
         self[service] = self.get_charm(charm,
                                        branch=branch,
                                        series=series)

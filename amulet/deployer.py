@@ -10,7 +10,12 @@ import yaml
 from path import path
 from path import tempdir
 
-from .helpers import default_environment, juju, timeout as unit_timesout
+from .helpers import (
+    default_environment,
+    juju,
+    get_charm_directory,
+    timeout as unit_timesout,
+)
 from .sentry import Talisman
 from .charm import CharmCache
 
@@ -44,7 +49,7 @@ class Deployment(object):
         self.series = series
         self.deployed = False
         self.juju_env = juju_env or default_environment()
-        self.charm_name = get_charm_name(os.getcwd())
+        self.charm_name = get_charm_name(get_charm_directory())
 
         self.sentry = None
         self.deployer = path(juju_deployer)
@@ -304,7 +309,8 @@ class Deployment(object):
             include_token = 'include-base64://'
             if type(v) is str and v.startswith(include_token):
                 v = v.replace(include_token, '')
-                with open(os.path.join(os.getcwd(), 'tests', v)) as f:
+                charm_directory = get_charm_directory()
+                with open(os.path.join(charm_directory, 'tests', v)) as f:
                     v = base64.b64encode(f.read())
                 service['options'][k] = v
 
